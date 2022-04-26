@@ -23,37 +23,55 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-      const notesCollection = client.db("noteDB").collection("notes");
+    const notesCollection = client.db("noteDB").collection("notes");
 
-      // GET API
-      app.get('/notes', async (req, res) => {
-          const query = req.query
-          const cursor = notesCollection.find(query)
-          const result = await cursor.toArray()
-          res.send(result)
-      })
+    // GET API
+    app.get("/notes", async (req, res) => {
+      const query = req.query;
+      const cursor = notesCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
-      // POST  API
-      app.post('/note', async (req, res) => {
-          const data = req.body
-          const result = await notesCollection.insertOne(data)
-          res.send(result)
-      })
+    // POST  API
+    app.post("/note", async (req, res) => {
+      const data = req.body;
+      const result = await notesCollection.insertOne(data);
+      res.send(result);
+    });
 
-      // PUT API
+    // PUT API
+    app.put("/node/:id", async (req, res) => {
+      const id = req.params.id;
+      const data = req.body;
+      console.log(req);
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          name: data.name,
+          review: data.review,
+        },
+      };
+      const result = await notesCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.send(result);
+    });
 
-      // DELETE API
-      app.delete('/note/:id', async (req, res) => {
-          const id = req.params.id
-          const filter = {_id: ObjectId(id)}
-          const result = await notesCollection.deleteOne(filter)
-          res.send(result)
-      })
-
+    // DELETE API
+    app.delete("/note/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const result = await notesCollection.deleteOne(filter);
+      res.send(result);
+    });
   } finally {
   }
 }
-run().catch(console.dir)
+run().catch(console.dir);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
