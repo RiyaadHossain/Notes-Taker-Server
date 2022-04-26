@@ -40,9 +40,16 @@ async function run() {
           res.send(result)
       })
 
-      // PUT API 
+      // PUT API
 
       // DELETE API
+      app.delete('/note/:id', async (req, res) => {
+          const id = req.params.id
+          const filter = {_id: ObjectId(id)}
+          const result = await notesCollection.deleteOne(filter)
+          res.send(result)
+      })
+
   } finally {
   }
 }
