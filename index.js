@@ -5,7 +5,6 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Password: zayeC7r5K9beINUo
 
 // Middleware
 app.use(cors());
