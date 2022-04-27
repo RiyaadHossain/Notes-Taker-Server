@@ -2,7 +2,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const express = require("express");
 var cors = require("cors");
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 // Password: zayeC7r5K9beINUo
 
@@ -41,16 +41,15 @@ async function run() {
     });
 
     // PUT API
-    app.put("/node/:id", async (req, res) => {
+    app.put("/note/:id", async (req, res) => {
       const id = req.params.id;
       const data = req.body;
-      console.log(req);
       const filter = { _id: ObjectId(id) };
       const options = { upsert: true };
       const updateDoc = {
         $set: {
-          name: data.name,
-          review: data.review,
+          user_name: data.user_name,
+          text: data.text,
         },
       };
       const result = await notesCollection.updateOne(
